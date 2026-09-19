@@ -2,14 +2,21 @@ class Program
 {
     static void Main()
     {
-        // TODO: Uncomment the code below to pass the first stage
-        while (true)
+        bool isExit = false;
+        while (!isExit)
         {
             Console.Write("$ ");
             string? command = Console.ReadLine();
             if (command?.Length > 0)
             {
-                Console.WriteLine($"{command}: command not found");
+                if (string.Equals(command, "exit"))
+                {
+                    isExit = true;
+                }
+                else
+                {
+                    Console.WriteLine($"{command}: command not found");
+                }
             }
         }
     }
