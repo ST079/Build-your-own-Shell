@@ -14,10 +14,10 @@ public class ShellApplication
 
             string? command = Console.ReadLine();
             var echo = new EchoCommand();
-            echo.run(command!);
 
             if (command?.Length > 0)
             {
+                echo.run(command!);
                 isExit = HandleCommand(command);
             }
         }
