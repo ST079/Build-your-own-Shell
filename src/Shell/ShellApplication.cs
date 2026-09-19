@@ -13,11 +13,9 @@ public class ShellApplication
             Console.Write("$ ");
 
             string? command = Console.ReadLine();
-            var echo = new EchoCommand();
 
             if (command?.Length > 0)
             {
-                echo.run(command!);
                 isExit = HandleCommand(command);
             }
         }
@@ -30,7 +28,13 @@ public class ShellApplication
             return true;
         }
 
-        // Console.WriteLine($"{command}: command not found");
+        if (command.StartsWith("echo "))
+        {
+            var echo = new EchoCommand();
+            echo.run(command!);
+        }
+
+        Console.WriteLine($"{command}: command not found");
 
         return false;
     }
