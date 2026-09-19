@@ -33,8 +33,12 @@ public class ShellApplication
             var echo = new EchoCommand();
             echo.run(command!);
         }
+        else
+        {
+            
 
         Console.WriteLine($"{command}: command not found");
+        }
 
         return false;
     }
