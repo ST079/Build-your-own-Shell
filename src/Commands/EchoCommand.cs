@@ -2,8 +2,9 @@ namespace Commands.Echo;
 
 public class EchoCommand
 {
-    public void run(string command)
+    public void Execute(string[] arguments)
     {
-        Console.WriteLine($"{command.Substring(5)}");
+        Console.WriteLine(string.Join(" ", arguments));
     }
+
 }
