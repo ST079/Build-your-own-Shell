@@ -4,5 +4,10 @@ class Program
     {
         // TODO: Uncomment the code below to pass the first stage
         Console.Write("$ ");
+        string? command = Console.ReadLine();
+        if (command?.Length > 0)
+        {
+            Console.WriteLine($"{command}: command not found");
+        }
     }
 }
