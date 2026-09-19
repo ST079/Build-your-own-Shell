@@ -34,7 +34,7 @@ public class ShellApplication
 
         string[] arguments = parts.Skip(1).ToArray();
 
-        if (command.StartsWith("echo "))
+        if (command == "echo")
         {
             var echo = new EchoCommand();
             echo.Execute(arguments);
@@ -45,7 +45,7 @@ public class ShellApplication
         {
             return true;
         }
-        
+
         Console.WriteLine($"{command}: command not found");
 
         return false;
