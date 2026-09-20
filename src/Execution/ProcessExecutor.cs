@@ -8,11 +8,19 @@ public class ProcessExecutor
     {
         var startInfo = new ProcessStartInfo
         {
-            FileName = Path.GetFileName(executablePath),
+            FileName = executablePath,
             UseShellExecute = false,
         };
 
-        foreach ( string argument in arguments)
+        startInfo.ArgumentList.Add("-c");
+        startInfo.ArgumentList.Add("exec -a \"$0\" \"$@\"");
+
+        // Set argv[0] to only the executable name
+        startInfo.ArgumentList.Add(Path.GetFileName(executablePath));
+
+        startInfo.ArgumentList.Add(executablePath);
+
+        foreach (string argument in arguments)
         {
             startInfo.ArgumentList.Add(argument);
         }
