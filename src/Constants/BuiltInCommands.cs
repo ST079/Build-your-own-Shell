@@ -7,5 +7,6 @@ public static class BuiltInCommands
         "exit",
         "type",
         "pwd",
+        "cd",
     ];
 }

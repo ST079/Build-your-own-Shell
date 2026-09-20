@@ -13,6 +13,7 @@ public class ShellApplication
     private readonly ExecutableFinders executableFinders = new();
     private readonly ProcessExecutor processExecutor = new();
     private readonly PwdCommand pwdCommand = new();
+    private readonly CdCommand cdCommand = new();
 
     public void Run()
     {
@@ -60,6 +61,12 @@ public class ShellApplication
         if (parsedCommand.Name == "pwd")
         {
             pwdCommand.Execute();
+            return false;
+        }
+
+        if (parsedCommand.Name == "cd")
+        {
+            cdCommand.Execute(parsedCommand.Arguments);
             return false;
         }
 
