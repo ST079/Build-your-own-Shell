@@ -12,7 +12,7 @@ public class TypeCommand
         }
         else
         {
-            Console.WriteLine($"{command}: command not found");
+            Console.WriteLine($"{command}: not found");
         }
     }
 }
