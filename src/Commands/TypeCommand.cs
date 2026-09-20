@@ -20,7 +20,7 @@ public class TypeCommand
 
             string? executablePath = executableFinders?.Find(command);
 
-            if (executableFinders is not null)
+            if (executablePath is not null)
             {
                 Console.WriteLine($"{command} is {executablePath}");
             }
