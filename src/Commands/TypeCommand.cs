@@ -6,9 +6,13 @@ public class TypeCommand
     {
         var command = argument[0];
 
-        if (string.Equals(command, "echo") || string.Equals(command, "exit")|| string.Equals(command, "type"))
+        if (string.Equals(command, "echo") || string.Equals(command, "exit") || string.Equals(command, "type"))
         {
             Console.WriteLine($"{command} is a shell builtin");
+        }
+        else
+        {
+            Console.WriteLine($"{command}: command not found");
         }
     }
 }
