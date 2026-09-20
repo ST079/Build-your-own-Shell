@@ -1,11 +1,13 @@
 
 
 using Constants.BuiltInCommands;
+using Execution;
 
 namespace Commands.Type;
 
 public class TypeCommand
 {
+    private readonly ExecutableFinders executableFinders = new();
     public void Execute(string[] arguments)
     {
         foreach (string command in arguments)
@@ -13,6 +15,14 @@ public class TypeCommand
             if (BuiltInCommands.Names.Contains(command))
             {
                 Console.WriteLine($"{command} is a shell builtin");
+                continue;
+            }
+
+            string? executablePath = executableFinders?.Find(command);
+
+            if (executableFinders is not null)
+            {
+                Console.WriteLine($"{command} is {executablePath}");
             }
             else
             {
