@@ -1,3 +1,4 @@
+using Commands;
 using Commands.Echo;
 using Commands.Type;
 using Execution;
@@ -11,6 +12,7 @@ public class ShellApplication
     private readonly TypeCommand typeCommand = new();
     private readonly ExecutableFinders executableFinders = new();
     private readonly ProcessExecutor processExecutor = new();
+    private readonly PwdCommand pwdCommand = new();
 
     public void Run()
     {
@@ -52,6 +54,12 @@ public class ShellApplication
         if (parsedCommand.Name == "type")
         {
             typeCommand.Execute(parsedCommand.Arguments);
+            return false;
+        }
+
+        if (parsedCommand.Name == "pwd")
+        {
+            pwdCommand.Execute();
             return false;
         }
 
