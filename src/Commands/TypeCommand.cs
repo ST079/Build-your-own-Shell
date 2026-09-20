@@ -1,18 +1,23 @@
+
+
+using Constants.BuiltInCommands;
+
 namespace Commands.Type;
 
 public class TypeCommand
 {
-    public void Execute(string[] argument)
+    public void Execute(string[] arguments)
     {
-        var command = argument[0];
-
-        if (string.Equals(command, "echo") || string.Equals(command, "exit") || string.Equals(command, "type"))
+        foreach (string command in arguments)
         {
-            Console.WriteLine($"{command} is a shell builtin");
-        }
-        else
-        {
-            Console.WriteLine($"{command}: not found");
+            if (BuiltInCommands.Names.Contains(command))
+            {
+                Console.WriteLine($"{command} is a shell builtin");
+            }
+            else
+            {
+                Console.WriteLine($"{command}: not found");
+            }
         }
     }
 }
