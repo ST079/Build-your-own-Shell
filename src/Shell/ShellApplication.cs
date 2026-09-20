@@ -35,16 +35,16 @@ public class ShellApplication
     {
         var parsedCommand = commandParser.Parse(input);
 
-        // if (parsedCommand.Name == "echo")
-        // {
-        //     echoCommand.Execute(parsedCommand.Arguments);
-        //     return false;
-        // }
+        if (parsedCommand.Name == "echo")
+        {
+            echoCommand.Execute(parsedCommand.Arguments);
+            return false;
+        }
 
-        // if (parsedCommand.Name == "exit")
-        // {
-        //     return true;
-        // }
+        if (parsedCommand.Name == "exit")
+        {
+            return true;
+        }
 
         if (parsedCommand.Name == "type")
         {
