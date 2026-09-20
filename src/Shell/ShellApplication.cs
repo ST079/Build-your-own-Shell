@@ -1,9 +1,14 @@
 using Commands.Echo;
+using Commands.Type;
 
 namespace Shell;
 
 public class ShellApplication
 {
+    private readonly CommandParser commandParser = new();
+    private readonly EchoCommand echoCommand = new();
+    private readonly TypeCommand typeCommand = new();
+
     public void Run()
     {
         bool isExit = false;
@@ -28,25 +33,26 @@ public class ShellApplication
 
     private bool HandleCommand(string input)
     {
-        string[] parts = input.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+        var parsedCommand = commandParser.Parse(input);
 
-        string command = parts[0];
+        // if (parsedCommand.Name == "echo")
+        // {
+        //     echoCommand.Execute(parsedCommand.Arguments);
+        //     return false;
+        // }
 
-        string[] arguments = parts.Skip(1).ToArray();
+        // if (parsedCommand.Name == "exit")
+        // {
+        //     return true;
+        // }
 
-        if (command == "echo")
+        if (parsedCommand.Name == "type")
         {
-            var echo = new EchoCommand();
-            echo.Execute(arguments);
+            typeCommand.Execute(parsedCommand.Arguments);
             return false;
         }
 
-        if (command == "exit")
-        {
-            return true;
-        }
-
-        Console.WriteLine($"{command}: command not found");
+        Console.WriteLine($"{parsedCommand.Name}: command not found");
 
         return false;
     }
