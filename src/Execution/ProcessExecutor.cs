@@ -8,7 +8,7 @@ public class ProcessExecutor
     {
         var startInfo = new ProcessStartInfo
         {
-            FileName = executablePath,
+            FileName = Path.GetFileName(executablePath),
             UseShellExecute = false,
         };
 
