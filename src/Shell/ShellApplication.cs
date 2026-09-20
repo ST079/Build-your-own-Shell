@@ -1,5 +1,6 @@
 using Commands.Echo;
 using Commands.Type;
+using Execution;
 
 namespace Shell;
 
@@ -8,6 +9,8 @@ public class ShellApplication
     private readonly CommandParser commandParser = new();
     private readonly EchoCommand echoCommand = new();
     private readonly TypeCommand typeCommand = new();
+    private readonly ExecutableFinders executableFinders = new();
+    private readonly ProcessExecutor processExecutor = new();
 
     public void Run()
     {
@@ -49,6 +52,14 @@ public class ShellApplication
         if (parsedCommand.Name == "type")
         {
             typeCommand.Execute(parsedCommand.Arguments);
+            return false;
+        }
+
+        string? executablePath = executableFinders.Find(parsedCommand.Name);
+
+        if (executablePath is not null)
+        {
+            processExecutor.Execute(executablePath, parsedCommand.Arguments);
             return false;
         }
 
