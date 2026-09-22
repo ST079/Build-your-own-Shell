@@ -6,6 +6,11 @@ public class CdCommand
     {
         string path = arguments[0];
 
+        if (path == "~")
+        {
+            path = Environment.GetEnvironmentVariable("Home") ?? "";
+        }
+
         if (Directory.Exists(path))
         {
             Directory.SetCurrentDirectory(path);
