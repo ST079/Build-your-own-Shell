@@ -125,8 +125,7 @@ public class CommandParser
                 tokens.RemoveAt(i);
                 i--;
             }
-
-            if (Equals(tokens[i], "2>"))
+            else if (Equals(tokens[i], "2>"))
             {
                 errorFile = tokens[i + 1];
 
