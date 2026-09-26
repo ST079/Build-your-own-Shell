@@ -41,7 +41,7 @@ public class ShellApplication
     {
         var parsedCommand = commandParser.Parse(input);
 
-        if (parsedCommand.Name == "echo")
+        if (parsedCommand.Name == "echo" && parsedCommand.OutputFile is null)
         {
             echoCommand.Execute(parsedCommand.Arguments);
             return false;
@@ -74,7 +74,7 @@ public class ShellApplication
 
         if (executablePath is not null)
         {
-            processExecutor.Execute(executablePath, parsedCommand.Arguments);
+            processExecutor.Execute(executablePath, parsedCommand.Arguments, parsedCommand.OutputFile);
             return false;
         }
 

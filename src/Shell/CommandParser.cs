@@ -16,6 +16,7 @@ public class CommandParser
 
         bool insideSingleQuotes = false;
         bool insideDoubleQuotes = false;
+        string outputFile = null;
 
         for (int i = 0; i < input.Length; i++)
         {
@@ -54,7 +55,18 @@ public class CommandParser
                     continue;
                 }
             }
-            
+
+            if (Equals(character, '>') && !insideDoubleQuotes && !insideSingleQuotes)
+            {
+                if (current.Count > 0)
+                {
+                    tokens.Add(new string(current.ToArray()));
+                }
+
+                tokens.Add(">");
+                continue;
+            }
+
             if (Equals(character, '\'') && !insideDoubleQuotes)
             {
                 insideSingleQuotes = !insideSingleQuotes;
@@ -85,10 +97,22 @@ public class CommandParser
             tokens.Add(new string(current.ToArray()));
         }
 
+        for (int i = 0; i < tokens.Count; i++)
+        {
+            if (Equals(tokens[i], ">") || Equals(tokens[i], "1>"))
+            {
+                outputFile = tokens[i + 1];
+
+                tokens.RemoveAt(i + 1);
+                tokens.RemoveAt(i);
+            }
+        }
+
         return new ParsedCommand
         {
             Name = tokens[0],
             Arguments = tokens.Skip(1).ToArray(),
+            OutputFile = outputFile,
         };
 
 
