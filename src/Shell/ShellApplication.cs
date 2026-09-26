@@ -50,7 +50,8 @@ public class ShellApplication
             }
             else if (parsedCommand.ErrorFile is not null)
             {
-                File.WriteAllText(parsedCommand.ErrorFile, string.Empty);
+                string output = string.Join(" ", parsedCommand.Arguments);
+                File.WriteAllText(parsedCommand.ErrorFile, output + Environment.NewLine);
             }
             else
             {
