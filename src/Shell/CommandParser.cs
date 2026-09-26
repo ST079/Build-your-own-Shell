@@ -59,22 +59,28 @@ public class CommandParser
 
             if (Equals(character, '>') && !insideDoubleQuotes && !insideSingleQuotes)
             {
+                bool isAppend = i + 1 < input.Length && Equals(input[i + 1], ">");
+                if (isAppend)
+                {
+                    i++;
+                }
+
                 if (current.Count > 0)
                 {
                     string currentToken = new(current.ToArray());
 
                     if (Equals(currentToken, "1"))
                     {
-                        tokens.Add("1>");
+                        tokens.Add(isAppend ? "1>>" : "1>");
                     }
                     else if (Equals(currentToken, "2"))
                     {
-                        tokens.Add("2>");
+                        tokens.Add(isAppend ? "2>>" : "2>");
                     }
                     else
                     {
                         tokens.Add(currentToken);
-                        tokens.Add(">");
+                        tokens.Add(isAppend ? ">>" : ">");
                     }
                     current.Clear();
                 }

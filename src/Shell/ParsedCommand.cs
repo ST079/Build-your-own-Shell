@@ -6,4 +6,5 @@ public class ParsedCommand
     public string[] Arguments { get; init; } = [];
     public string? OutputFile { get; set; }
     public string? ErrorFile { get; set; }
+    public bool AppendOutput { get; set; }
 }

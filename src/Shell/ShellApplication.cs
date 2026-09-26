@@ -45,14 +45,14 @@ public class ShellApplication
         {
             if (parsedCommand.OutputFile is not null)
             {
-                string output = string.Join(" ", parsedCommand.Arguments);
-                if (File.Exists(parsedCommand.OutputFile))
+                string output = string.Join(" ", parsedCommand.Arguments + Environment.NewLine);
+                if (parsedCommand.AppendOutput)
                 {
-                    File.AppendAllText(parsedCommand.OutputFile, output + Environment.NewLine);
+                    File.AppendAllText(parsedCommand.OutputFile, output);
                 }
                 else
                 {
-                    File.WriteAllText(parsedCommand.OutputFile, output + Environment.NewLine);
+                    File.WriteAllText(parsedCommand.OutputFile, output);
                 }
             }
             else
