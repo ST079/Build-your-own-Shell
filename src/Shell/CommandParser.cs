@@ -16,8 +16,8 @@ public class CommandParser
 
         bool insideSingleQuotes = false;
         bool insideDoubleQuotes = false;
-        string outputFile = null;
-        string errorFile = null;
+        string? outputFile = null;
+        string? errorFile = null;
 
         for (int i = 0; i < input.Length; i++)
         {
