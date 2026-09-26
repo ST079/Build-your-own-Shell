@@ -17,8 +17,19 @@ public class CommandParser
         bool insideSingleQuotes = false;
         bool insideDoubleQuotes = false;
 
-        foreach (char character in input)
+        for (int i = 0; i < input.Length; i++)
         {
+            var character = input[i];
+
+            if (character == '\\' && !insideSingleQuotes && !insideDoubleQuotes)
+            {
+                i++;
+                if (i < input.Length)
+                {
+                    current.Add(input[i]);
+                }
+                continue;
+            }
 
             if (Equals(character, '\'') && !insideDoubleQuotes)
             {
