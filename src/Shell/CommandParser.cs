@@ -20,13 +20,13 @@ public class CommandParser
         foreach (char character in input)
         {
 
-            if (Equals(character, '\''))
+            if (Equals(character, '\'') && !insideDoubleQuotes)
             {
                 insideSingleQuotes = !insideSingleQuotes;
                 continue;
             }
 
-            if (Equals(character, '\"'))
+            if (Equals(character, '\"') && !insideSingleQuotes)
             {
                 insideDoubleQuotes = !insideDoubleQuotes;
                 continue;
