@@ -26,13 +26,13 @@ public class CommandParser
                 continue;
             }
 
-            if(Equals(character, '\"'))
+            if (Equals(character, '\"'))
             {
                 insideDoubleQuotes = !insideDoubleQuotes;
                 continue;
             }
 
-            if( char.IsWhiteSpace(character) && (!insideSingleQuotes || !insideDoubleQuotes))
+            if (char.IsWhiteSpace(character) && !insideSingleQuotes && !insideDoubleQuotes)
             {
                 if (current.Count > 0)
                 {
@@ -45,7 +45,7 @@ public class CommandParser
             current.Add(character);
         }
 
-        if(current.Count > 0)
+        if (current.Count > 0)
         {
             tokens.Add(new string(current.ToArray()));
         }
@@ -56,6 +56,6 @@ public class CommandParser
             Arguments = tokens.Skip(1).ToArray(),
         };
 
-        
+
     }
 }
