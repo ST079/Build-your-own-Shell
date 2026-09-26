@@ -95,7 +95,7 @@ public class ShellApplication
 
         if (executablePath is not null)
         {
-            processExecutor.Execute(executablePath, parsedCommand.Arguments, parsedCommand.OutputFile, parsedCommand.ErrorFile);
+            processExecutor.Execute(executablePath, parsedCommand.Arguments, parsedCommand.OutputFile, parsedCommand.ErrorFile, parsedCommand.AppendOutput);
             return false;
         }
 

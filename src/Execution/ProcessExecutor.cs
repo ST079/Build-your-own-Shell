@@ -4,7 +4,7 @@ namespace Execution;
 
 public class ProcessExecutor
 {
-    public void Execute(string executablePath, string[] arguments, string? outputFile, string? errorFile)
+    public void Execute(string executablePath, string[] arguments, string? outputFile, string? errorFile, bool appendOutput)
     {
         var startInfo = new ProcessStartInfo
         {
@@ -30,7 +30,14 @@ public class ProcessExecutor
         {
             string output = process.StandardOutput.ReadToEnd();
 
-            File.WriteAllText(outputFile, output);
+            if (appendOutput)
+            {
+                File.AppendAllText(outputFile, output);
+            }
+            else
+            {
+                File.WriteAllText(outputFile, output);
+            }
         }
 
         if (errorFile is not null)
