@@ -10,8 +10,8 @@ public class ProcessExecutor
         {
             FileName = Path.GetFileName(executablePath),
             UseShellExecute = false,
-            RedirectStandardOutput = !string.IsNullOrEmpty(outputFile),
-            RedirectStandardError = !string.IsNullOrEmpty(errorFile),
+            RedirectStandardOutput = outputFile is not null,
+            RedirectStandardError = errorFile is not null,
         };
 
         foreach (string argument in arguments)
