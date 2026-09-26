@@ -60,7 +60,7 @@ public class CommandParser
 
             if (Equals(character, '>') && !insideDoubleQuotes && !insideSingleQuotes)
             {
-                bool isAppend = i + 1 < input.Length && Equals(input[i + 1], ">");
+                bool isAppend = i + 1 < input.Length && input[i + 1] == '>';
                 if (isAppend)
                 {
                     i++;
