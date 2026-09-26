@@ -123,6 +123,7 @@ public class CommandParser
 
                 tokens.RemoveAt(i + 1);
                 tokens.RemoveAt(i);
+                i--;
             }
 
             if (Equals(tokens[i], "2>"))
@@ -131,6 +132,7 @@ public class CommandParser
 
                 tokens.RemoveAt(i + 1);
                 tokens.RemoveAt(i);
+                i--;
             }
         }
 
