@@ -45,7 +45,7 @@ public class ShellApplication
         {
             if (parsedCommand.OutputFile is not null)
             {
-                string output = string.Join(" ", parsedCommand.Arguments + Environment.NewLine);
+                string output = string.Join(" ", parsedCommand.Arguments) + Environment.NewLine;
                 if (parsedCommand.AppendOutput)
                 {
                     File.AppendAllText(parsedCommand.OutputFile, output);
