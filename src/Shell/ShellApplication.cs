@@ -48,15 +48,16 @@ public class ShellApplication
                 string output = string.Join(" ", parsedCommand.Arguments);
                 File.WriteAllText(parsedCommand.OutputFile, output + Environment.NewLine);
             }
-            else if (parsedCommand.ErrorFile is not null)
-            {
-                string output = string.Join(" ", parsedCommand.Arguments);
-                File.WriteAllText(parsedCommand.ErrorFile, output);
-            }
             else
             {
                 echoCommand.Execute(parsedCommand.Arguments);
             }
+
+            if (parsedCommand.ErrorFile is not null)
+            {
+                File.WriteAllText(parsedCommand.ErrorFile, string.Empty);
+            }
+            
             return false;
         }
 
