@@ -16,7 +16,8 @@ public class CommandParser
 
         bool insideSingleQuotes = false;
         bool insideDoubleQuotes = false;
-        string outputFile = null;
+        string outputFile = string.Empty;
+        string errorFile = string.Empty;
 
         for (int i = 0; i < input.Length; i++)
         {
@@ -65,6 +66,10 @@ public class CommandParser
                     if (Equals(currentToken, "1"))
                     {
                         tokens.Add("1>");
+                    }
+                    else if (Equals(currentToken, "2"))
+                    {
+                        tokens.Add("2>");
                     }
                     else
                     {
@@ -119,6 +124,14 @@ public class CommandParser
                 tokens.RemoveAt(i + 1);
                 tokens.RemoveAt(i);
             }
+
+            if (Equals(tokens[i], "2>"))
+            {
+                errorFile = tokens[i + 1];
+
+                tokens.RemoveAt(i + 1);
+                tokens.RemoveAt(i);
+            }
         }
 
         return new ParsedCommand
@@ -126,6 +139,7 @@ public class CommandParser
             Name = tokens[0],
             Arguments = tokens.Skip(1).ToArray(),
             OutputFile = outputFile,
+            ErrorFile = errorFile,
         };
 
 

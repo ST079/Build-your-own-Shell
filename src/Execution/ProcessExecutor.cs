@@ -4,16 +4,14 @@ namespace Execution;
 
 public class ProcessExecutor
 {
-    public void Execute(
-        string executablePath,
-        string[] arguments,
-        string? outputFile)
+    public void Execute(string executablePath, string[] arguments, string? outputFile, string? errorFile)
     {
         var startInfo = new ProcessStartInfo
         {
             FileName = Path.GetFileName(executablePath),
             UseShellExecute = false,
-            RedirectStandardOutput = outputFile is not null,
+            RedirectStandardOutput = !string.IsNullOrEmpty(outputFile),
+            RedirectStandardError = !string.IsNullOrEmpty(errorFile),
         };
 
         foreach (string argument in arguments)
@@ -33,6 +31,13 @@ public class ProcessExecutor
             string output = process.StandardOutput.ReadToEnd();
 
             File.WriteAllText(outputFile, output);
+        }
+
+        if (errorFile is not null)
+        {
+            string error = process.StandardError.ReadToEnd();
+
+            File.WriteAllText(errorFile, error);
         }
 
         process.WaitForExit();
