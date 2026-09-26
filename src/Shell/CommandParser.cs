@@ -60,10 +60,23 @@ public class CommandParser
             {
                 if (current.Count > 0)
                 {
-                    tokens.Add(new string(current.ToArray()));
-                }
+                    string currentToken = new(current.ToArray());
 
-                tokens.Add(">");
+                    if (Equals(currentToken, "1"))
+                    {
+                        tokens.Add("1>");
+                    }
+                    else
+                    {
+                        tokens.Add(currentToken);
+                        tokens.Add(">");
+                    }
+                    current.Clear();
+                }
+                else
+                {
+                    tokens.Add(">");
+                }
                 continue;
             }
 
