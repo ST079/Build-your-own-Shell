@@ -86,7 +86,7 @@ public class CommandParser
                 }
                 else
                 {
-                    tokens.Add(">");
+                    tokens.Add(isAppend ? ">>" : ">");
                 }
                 continue;
             }
