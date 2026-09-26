@@ -21,16 +21,40 @@ public class CommandParser
         {
             var character = input[i];
 
-            if (character == '\\' && !insideSingleQuotes && !insideDoubleQuotes)
+            if (character == '\\')
             {
-                i++;
-                if (i < input.Length)
+                // Inside double quotes:
+                // only \" and \\ are special.
+                if (insideDoubleQuotes)
                 {
-                    current.Add(input[i]);
-                }
-                continue;
-            }
+                    if (i + 1 < input.Length &&
+                        (input[i + 1] == '"' || input[i + 1] == '\\'))
+                    {
+                        i++;
+                        current.Add(input[i]);
+                        continue;
+                    }
 
+                    // Other backslashes stay literal.
+                    current.Add(character);
+                    continue;
+                }
+
+                // Outside quotes:
+                // backslash escapes any next character.
+                if (!insideSingleQuotes)
+                {
+                    i++;
+
+                    if (i < input.Length)
+                    {
+                        current.Add(input[i]);
+                    }
+
+                    continue;
+                }
+            }
+            
             if (Equals(character, '\'') && !insideDoubleQuotes)
             {
                 insideSingleQuotes = !insideSingleQuotes;
