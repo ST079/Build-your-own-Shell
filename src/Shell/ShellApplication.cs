@@ -46,7 +46,14 @@ public class ShellApplication
             if (parsedCommand.OutputFile is not null)
             {
                 string output = string.Join(" ", parsedCommand.Arguments);
-                File.WriteAllText(parsedCommand.OutputFile, output + Environment.NewLine);
+                if (File.Exists(parsedCommand.OutputFile))
+                {
+                    File.AppendAllText(parsedCommand.OutputFile, output + Environment.NewLine);
+                }
+                else
+                {
+                    File.WriteAllText(parsedCommand.OutputFile, output + Environment.NewLine);
+                }
             }
             else
             {
@@ -57,7 +64,7 @@ public class ShellApplication
             {
                 File.WriteAllText(parsedCommand.ErrorFile, string.Empty);
             }
-            
+
             return false;
         }
 
