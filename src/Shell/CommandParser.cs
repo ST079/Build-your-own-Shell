@@ -15,6 +15,7 @@ public class CommandParser
         var current = new List<char>();
 
         bool insideSingleQuotes = false;
+        bool insideDoubleQuotes = false;
 
         foreach (char character in input)
         {
@@ -25,7 +26,13 @@ public class CommandParser
                 continue;
             }
 
-            if( char.IsWhiteSpace(character) && !insideSingleQuotes)
+            if(Equals(character, '\"'))
+            {
+                insideDoubleQuotes = !insideDoubleQuotes;
+                continue;
+            }
+
+            if( char.IsWhiteSpace(character) && (!insideSingleQuotes || !insideDoubleQuotes))
             {
                 if (current.Count > 0)
                 {
