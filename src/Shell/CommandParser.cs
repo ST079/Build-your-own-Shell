@@ -124,8 +124,7 @@ public class CommandParser
 
         for (int i = 0; i < tokens.Count; i++)
         {
-            if (tokens[i] == ">" || tokens[i] == "1>" ||
-        tokens[i] == ">>" || tokens[i] == "1>>")
+            if (tokens[i] == ">" || tokens[i] == "1>" || tokens[i] == ">>" || tokens[i] == "1>>")
             {
                 outputFile = tokens[i + 1];
 
@@ -138,6 +137,8 @@ public class CommandParser
             else if (Equals(tokens[i], "2>") || Equals(tokens[i], "2>>"))
             {
                 errorFile = tokens[i + 1];
+
+                appendOutput = tokens[i] == "2>>";
 
                 tokens.RemoveAt(i + 1);
                 tokens.RemoveAt(i);

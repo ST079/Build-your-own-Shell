@@ -43,8 +43,14 @@ public class ProcessExecutor
         if (errorFile is not null)
         {
             string error = process.StandardError.ReadToEnd();
-
-            File.WriteAllText(errorFile, error);
+            if (appendOutput)
+            {
+                File.AppendAllText(errorFile, error);
+            }
+            else
+            {
+                File.WriteAllText(errorFile, error);
+            }
         }
 
         process.WaitForExit();

@@ -41,29 +41,9 @@ public class ShellApplication
     {
         var parsedCommand = commandParser.Parse(input);
 
-        if (parsedCommand.Name == "echo")
+        if (parsedCommand.Name == "echo" && parsedCommand.OutputFile is null && parsedCommand.ErrorFile is null)
         {
-            if (parsedCommand.OutputFile is not null)
-            {
-                string output = string.Join(" ", parsedCommand.Arguments) + Environment.NewLine;
-                if (parsedCommand.AppendOutput)
-                {
-                    File.AppendAllText(parsedCommand.OutputFile, output);
-                }
-                else
-                {
-                    File.WriteAllText(parsedCommand.OutputFile, output);
-                }
-            }
-            else
-            {
-                echoCommand.Execute(parsedCommand.Arguments);
-            }
-
-            if (parsedCommand.ErrorFile is not null)
-            {
-                File.WriteAllText(parsedCommand.ErrorFile, string.Empty);
-            }
+            echoCommand.Execute(parsedCommand.Arguments);
 
             return false;
         }
