@@ -33,23 +33,30 @@ public class ExecutableFinders
 
     private bool IsExecutable(string filePath)
     {
-        try
+        if (OperatingSystem.IsLinux() || OperatingSystem.IsMacOS())
         {
-            UnixFileMode mode = File.GetUnixFileMode(filePath);
+            try
+            {
+                UnixFileMode mode = File.GetUnixFileMode(filePath);
 
-            return (mode & (UnixFileMode.UserExecute | UnixFileMode.GroupExecute | UnixFileMode.OtherExecute)) != 0;
+                return (mode & (UnixFileMode.UserExecute | UnixFileMode.GroupExecute | UnixFileMode.OtherExecute)) != 0;
+            }
+            catch (PlatformNotSupportedException)
+            {
+                return false;
+            }
+            catch (IOException)
+            {
+                return false;
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return false;
+            }
         }
-        catch (PlatformNotSupportedException)
-        {
-            return false;
-        }
-        catch (IOException)
-        {
-            return false;
-        }
-        catch (UnauthorizedAccessException)
-        {
-            return false;
-        }
+
+
+        //fallback for windows
+        return true;
     }
 }
