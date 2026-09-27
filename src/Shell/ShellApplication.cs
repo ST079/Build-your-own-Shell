@@ -134,6 +134,7 @@ public class ShellApplication
 
         if (match is null)
         {
+            Console.Write('\x07');
             return;
         }
 
