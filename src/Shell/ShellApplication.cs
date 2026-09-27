@@ -134,6 +134,11 @@ public class ShellApplication
 
         if (match is null)
         {
+            match = executableFinders.FindExecutableName(current);
+        }
+        
+        if (match is null)
+        {
             Console.Write('\x07');
             return;
         }
