@@ -13,7 +13,7 @@ public class ExecutableFinders
         }
 
         // PATH contains multiple directories separated by the platform-specific separator.
-        string[] directories = path.Split( Path.PathSeparator, StringSplitOptions.RemoveEmptyEntries);
+        string[] directories = path.Split(Path.PathSeparator, StringSplitOptions.RemoveEmptyEntries);
 
         foreach (string directory in directories)
         {
@@ -72,8 +72,9 @@ public class ExecutableFinders
         return true;
     }
 
-    public string? FindExecutableName(string prefix)
+    public List<string>? FindExecutableNames(string prefix)
     {
+        var matches = new List<string>();
         // Read PATH so we can search for executable names matching the user's input.
         string? path = Environment.GetEnvironmentVariable("PATH");
 
@@ -110,17 +111,18 @@ public class ExecutableFinders
                 // Windows does not use Unix execute permission bits.
                 if (OperatingSystem.IsWindows())
                 {
-                    return fileName;
+                    matches.Add(fileName);
+                    continue;
                 }
 
                 // On Unix, only complete the name if the file is executable.
                 if ((File.GetUnixFileMode(filePath) & executeBits) != 0)
                 {
-                    return fileName;
+                    matches.Add(fileName);
                 }
             }
         }
 
-        return null;
+        return matches.Distinct().OrderBy(name => name).ToList();
     }
 }

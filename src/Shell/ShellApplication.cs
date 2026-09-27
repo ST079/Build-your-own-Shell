@@ -16,6 +16,8 @@ public class ShellApplication
     private readonly PwdCommand pwdCommand = new();
     private readonly CdCommand cdCommand = new();
 
+    private int tabPressCount;
+
     public void Run()
     {
         bool isExit = false;
@@ -98,17 +100,21 @@ public class ShellApplication
             if (key.Key == ConsoleKey.Enter)
             {
                 Console.WriteLine();
+                tabPressCount = 0;
                 return new String(input.ToArray());
             }
 
             if (key.Key == ConsoleKey.Tab)
             {
+                tabPressCount++;
                 AutoComplete(input);
                 continue;
             }
 
             if (key.Key == ConsoleKey.Backspace)
             {
+                tabPressCount = 0;
+
                 if (input.Count > 0)
                 {
                     input.RemoveAt(input.Count - 1);
@@ -119,6 +125,7 @@ public class ShellApplication
 
             if (!char.IsControl(key.KeyChar))
             {
+                tabPressCount = 0;
                 input.Add(key.KeyChar);
                 Console.Write(key.KeyChar);
             }
@@ -129,27 +136,56 @@ public class ShellApplication
     {
         string current = new(input.ToArray());
 
-        string? match = BuiltInCommands.Names.FirstOrDefault(
-            command => command.StartsWith(current));
+        // Check built-in commands first.
+        List<string> matches = BuiltInCommands.Names.Where(command => command.StartsWith(current)).ToList();
 
-        if (match is null)
-        {
-            match = executableFinders.FindExecutableName(current);
-        }
-        
-        if (match is null)
+        // Add external executables found in PATH.
+        matches.AddRange(executableFinders.FindExecutableNames(current)!);
+
+        matches = matches
+            .Distinct()
+            .OrderBy(name => name)
+            .ToList();
+
+        if (matches.Count == 0)
         {
             Console.Write('\x07');
             return;
         }
 
-        for (int i = current.Length; i < match.Length; i++)
+        // Exactly one match: complete it immediately.
+        if (matches.Count == 1)
         {
-            input.Add(match[i]);
-            Console.Write(match[i]);
+            string match = matches[0];
+
+            for (int i = current.Length; i < match.Length; i++)
+            {
+                input.Add(match[i]);
+                Console.Write(match[i]);
+            }
+
+            input.Add(' ');
+            Console.Write(' ');
+
+            tabPressCount = 0;
+            return;
         }
 
-        input.Add(' ');
-        Console.Write(' ');
+        // Multiple matches: first TAB only rings the bell.
+        if (tabPressCount == 1)
+        {
+            Console.Write('\x07');
+            return;
+        }
+
+        // Second TAB displays all matching commands.
+        Console.WriteLine();
+
+        Console.WriteLine(string.Join("  ", matches));
+
+        Console.Write("$ ");
+        Console.Write(current);
+
+        tabPressCount = 0;
     }
 }
