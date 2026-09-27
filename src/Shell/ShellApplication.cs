@@ -1,6 +1,7 @@
 using Commands;
 using Commands.Echo;
 using Commands.Type;
+using Constants.BuiltInCommands;
 using Execution;
 
 namespace Shell;
@@ -24,7 +25,9 @@ public class ShellApplication
             Console.Write("$ ");
 
             //takes the user input.
-            string? input = Console.ReadLine();
+            // string? input = Console.ReadLine();
+
+            string? input = ReadCommand();
 
             //checks if the input has value or not
             // if no value or whitespace skip the latter part.
@@ -82,5 +85,65 @@ public class ShellApplication
         Console.WriteLine($"{parsedCommand.Name}: command not found");
 
         return false;
+    }
+
+    private string ReadCommand()
+    {
+        var input = new List<char>();
+
+        while (true)
+        {
+            ConsoleKeyInfo key = Console.ReadKey(intercept: true);
+
+            if (key.Key == ConsoleKey.Enter)
+            {
+                Console.WriteLine();
+                return new String(input.ToArray());
+            }
+
+            if (key.Key == ConsoleKey.Tab)
+            {
+                AutoComplete(input);
+                continue;
+            }
+
+            if (key.Key == ConsoleKey.Backspace)
+            {
+                if (input.Count > 0)
+                {
+                    input.RemoveAt(input.Count - 1);
+                    Console.Write("\b \b");
+                }
+                continue;
+            }
+
+            if (!char.IsControl(key.KeyChar))
+            {
+                input.Add(key.KeyChar);
+                Console.Write(key.KeyChar);
+            }
+        }
+    }
+
+    private void AutoComplete(List<char> input)
+    {
+        string current = new(input.ToArray());
+
+        string? match = BuiltInCommands.Names.FirstOrDefault(
+            command => command.StartsWith(current));
+
+        if (match is null)
+        {
+            return;
+        }
+
+        for (int i = current.Length; i < match.Length; i++)
+        {
+            input.Add(match[i]);
+            Console.Write(match[i]);
+        }
+
+        input.Add(' ');
+        Console.Write(' ');
     }
 }
