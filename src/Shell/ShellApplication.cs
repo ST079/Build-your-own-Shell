@@ -1,3 +1,4 @@
+using System.Net.NetworkInformation;
 using Commands;
 using Commands.Echo;
 using Commands.Type;
@@ -137,16 +138,18 @@ public class ShellApplication
         string current = new(input.ToArray());
 
         // Check built-in commands first.
-        List<string> matches = BuiltInCommands.Names.Where(command => command.StartsWith(current)).ToList();
+        var matches = BuiltInCommands.Names.Where(command => command.StartsWith(current, StringComparison.Ordinal)).ToList();
 
         // Add external executables found in PATH.
-        matches.AddRange(executableFinders.FindExecutableNames(current)!);
+        matches.AddRange(executableFinders.FindExecutableNames(current));
 
+        // Remove duplicate and order them.
         matches = matches
             .Distinct()
-            .OrderBy(name => name)
+            .OrderBy(name => name, StringComparer.Ordinal)
             .ToList();
 
+        // No matches: ring the bell and preserve the current input.
         if (matches.Count == 0)
         {
             Console.Write('\x07');
@@ -156,36 +159,83 @@ public class ShellApplication
         // Exactly one match: complete it immediately.
         if (matches.Count == 1)
         {
-            string match = matches[0];
-
-            for (int i = current.Length; i < match.Length; i++)
-            {
-                input.Add(match[i]);
-                Console.Write(match[i]);
-            }
-
-            input.Add(' ');
-            Console.Write(' ');
-
+            AppendCompletion(input, current, matches[0], addSpace: true);
             tabPressCount = 0;
             return;
         }
 
-        // Multiple matches: first TAB only rings the bell.
-        if (tabPressCount == 1)
+        //multiple matches: complete their longest common prefix
+        string commonPrefix = FindLongestCommonPrefix(matches);
+
+        if (commonPrefix.Length > current.Length)
         {
-            Console.Write('\x07');
+            AppendCompletion(input, current, commonPrefix, addSpace: false);
+            tabPressCount = 0;
             return;
         }
 
-        // Second TAB displays all matching commands.
-        Console.WriteLine();
 
-        Console.WriteLine(string.Join("  ", matches));
+        // no additional character can be completed
+        // a repeated tab displays all the matching commands.
+        if (tabPressCount >= 2)
+        {
+            Console.WriteLine();
 
-        Console.Write("$ ");
-        Console.Write(current);
+            Console.WriteLine(string.Join("  ", matches));
 
-        tabPressCount = 0;
+            Console.Write("$ ");
+            Console.Write(new string(input.ToArray()));
+
+            tabPressCount = 0;
+        }
+        else
+        {
+            Console.Write('\x07');
+        }
+    }
+
+    private void AppendCompletion(List<char> input, string current, string completion, bool addSpace)
+    {
+        // add and display only the characters missing from the current input.
+        for (int i = current.Length; i < completion.Length; i++)
+        {
+            input.Add(completion[i]);
+            Console.Write(completion[i]);
+        }
+
+        // add a trailing space only when a single match remains.
+        if (addSpace)
+        {
+            input.Add(' ');
+            Console.Write(' ');
+        }
+    }
+
+    private string FindLongestCommonPrefix(List<string> matches)
+    {
+        if (matches.Count == 0)
+        {
+            return string.Empty;
+        }
+
+        string prefix = matches[0];
+
+        for (int i = 1; i < matches.Count; i++)
+        {
+            int commonLength = 0;
+            int maxLength = Math.Min(prefix.Length, matches[i].Length);
+            while (commonLength < maxLength && prefix[commonLength] == matches[i][commonLength])
+            {
+                commonLength++;
+            }
+
+            prefix = prefix[..commonLength];
+
+            if (prefix.Length == 0)
+            {
+                break;
+            }
+        }
+        return prefix;
     }
 }
