@@ -1,8 +1,10 @@
 using System.Diagnostics;
+using CodeCrafters.Shell.src.Core.Ports.Driven;
 
-namespace Execution;
+namespace CodeCrafters.Shell.src.Adapters.Driven;
 
-public class ProcessExecutor
+// Driven adapter: runs external programs as child processes.
+public class ProcessExecutor : IProcessExecutor
 {
     public void Execute(string executablePath, string[] arguments, string? outputFile, string? errorFile, bool appendOutput)
     {

@@ -1,6 +1,9 @@
-namespace Execution;
+using CodeCrafters.Shell.src.Core.Ports.Driven;
 
-public class ExecutableFinders
+namespace CodeCrafters.Shell.src.Adapters.Driven;
+
+// Driven adapter: finds executables by searching the directories listed in PATH.
+public class PathExecutableFinder : IExecutableFinder
 {
     public string? Find(string command)
     {

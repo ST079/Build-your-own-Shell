@@ -1,22 +1,11 @@
-using System.Net.NetworkInformation;
-using Commands;
-using Commands.Echo;
-using Commands.Type;
-using Constants.BuiltInCommands;
-using Execution;
+using CodeCrafters.Shell.src.Core.Ports.Driving;
 
-namespace Shell;
+namespace CodeCrafters.Shell.src.Adapters.Driving;
 
-public class ShellApplication
+// Driving adapter: the interactive prompt. It reads key presses from the console, handles
+// line editing and tab completion, and hands each finished line to the core.
+public class ConsoleRepl(ICommandHandler commandHandler, ICommandCompleter commandCompleter)
 {
-    private readonly CommandParser commandParser = new();
-    private readonly EchoCommand echoCommand = new();
-    private readonly TypeCommand typeCommand = new();
-    private readonly ExecutableFinders executableFinders = new();
-    private readonly ProcessExecutor processExecutor = new();
-    private readonly PwdCommand pwdCommand = new();
-    private readonly CdCommand cdCommand = new();
-
     private int tabPressCount;
 
     public void Run()
@@ -39,55 +28,8 @@ public class ShellApplication
                 continue;
             }
 
-            isExit = HandleCommand(input);
+            isExit = commandHandler.Handle(input);
         }
-    }
-
-    private bool HandleCommand(string input)
-    {
-        var parsedCommand = commandParser.Parse(input);
-
-        if (parsedCommand.Name == "echo" && parsedCommand.OutputFile is null && parsedCommand.ErrorFile is null)
-        {
-            echoCommand.Execute(parsedCommand.Arguments);
-
-            return false;
-        }
-
-        if (parsedCommand.Name == "exit")
-        {
-            return true;
-        }
-
-        if (parsedCommand.Name == "type")
-        {
-            typeCommand.Execute(parsedCommand.Arguments);
-            return false;
-        }
-
-        if (parsedCommand.Name == "pwd")
-        {
-            pwdCommand.Execute();
-            return false;
-        }
-
-        if (parsedCommand.Name == "cd")
-        {
-            cdCommand.Execute(parsedCommand.Arguments);
-            return false;
-        }
-
-        string? executablePath = executableFinders.Find(parsedCommand.Name);
-
-        if (executablePath is not null)
-        {
-            processExecutor.Execute(executablePath, parsedCommand.Arguments, parsedCommand.OutputFile, parsedCommand.ErrorFile, parsedCommand.AppendOutput);
-            return false;
-        }
-
-        Console.WriteLine($"{parsedCommand.Name}: command not found");
-
-        return false;
     }
 
     private string ReadCommand()
@@ -137,17 +79,8 @@ public class ShellApplication
     {
         string current = new(input.ToArray());
 
-        // Check built-in commands first.
-        var matches = BuiltInCommands.Names.Where(command => command.StartsWith(current, StringComparison.Ordinal)).ToList();
-
-        // Add external executables found in PATH.
-        matches.AddRange(executableFinders.FindExecutableNames(current));
-
-        // Remove duplicate and order them.
-        matches = matches
-            .Distinct()
-            .OrderBy(name => name, StringComparer.Ordinal)
-            .ToList();
+        // Ask the core for the built-in and PATH commands that match the current input.
+        var matches = commandCompleter.FindMatches(current);
 
         // No matches: ring the bell and preserve the current input.
         if (matches.Count == 0)
@@ -165,7 +98,7 @@ public class ShellApplication
         }
 
         //multiple matches: complete their longest common prefix
-        string commonPrefix = FindLongestCommonPrefix(matches);
+        string commonPrefix = commandCompleter.FindLongestCommonPrefix(matches);
 
         if (commonPrefix.Length > current.Length)
         {
@@ -209,33 +142,5 @@ public class ShellApplication
             input.Add(' ');
             Console.Write(' ');
         }
-    }
-
-    private string FindLongestCommonPrefix(List<string> matches)
-    {
-        if (matches.Count == 0)
-        {
-            return string.Empty;
-        }
-
-        string prefix = matches[0];
-
-        for (int i = 1; i < matches.Count; i++)
-        {
-            int commonLength = 0;
-            int maxLength = Math.Min(prefix.Length, matches[i].Length);
-            while (commonLength < maxLength && prefix[commonLength] == matches[i][commonLength])
-            {
-                commonLength++;
-            }
-
-            prefix = prefix[..commonLength];
-
-            if (prefix.Length == 0)
-            {
-                break;
-            }
-        }
-        return prefix;
     }
 }

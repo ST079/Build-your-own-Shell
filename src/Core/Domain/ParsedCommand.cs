@@ -1,4 +1,4 @@
-namespace Shell;
+namespace CodeCrafters.Shell.src.Core.Domain;
 
 public class ParsedCommand
 {

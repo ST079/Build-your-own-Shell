@@ -1,4 +1,4 @@
-namespace Constants.BuiltInCommands;
+namespace CodeCrafters.Shell.src.Core.Domain;
 
 public static class BuiltInCommands
 {
