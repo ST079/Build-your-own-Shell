@@ -1,11 +1,12 @@
 using CodeCrafters.Shell.src.Core.Domain;
 using CodeCrafters.Shell.src.Core.Ports.Driven;
 using CodeCrafters.Shell.src.Core.Ports.Driving;
+using Microsoft.VisualBasic;
 
 namespace CodeCrafters.Shell.src.Core.Application;
 
 // Finds the command names that can complete what the user has typed so far.
-public class CommandCompleter(IExecutableFinder executableFinder) : ICommandCompleter
+public class CommandCompleter(IExecutableFinder executableFinder, IFileSystem fileSystem) : ICommandCompleter
 {
     public List<string> FindMatches(string prefix)
     {
@@ -20,6 +21,18 @@ public class CommandCompleter(IExecutableFinder executableFinder) : ICommandComp
             .Distinct()
             .OrderBy(name => name, StringComparer.Ordinal)
             .ToList();
+    }
+
+    public List<string> FindFileMatches(string prefix)
+    {
+        // Look at the files in the directory the shell is currently in.
+        List<string> fileNames = fileSystem.GetFileNames(fileSystem.GetCurrentDirectory());
+
+        // keep the ones that start with what the user typed, sorted like the command matches.
+        return fileNames
+        .Where(name => name.StartsWith(prefix, StringComparison.Ordinal))
+        .OrderBy(name => name, StringComparer.Ordinal)
+        .ToList();
     }
 
     public string FindLongestCommonPrefix(List<string> matches)
@@ -49,4 +62,5 @@ public class CommandCompleter(IExecutableFinder executableFinder) : ICommandComp
         }
         return prefix;
     }
+
 }

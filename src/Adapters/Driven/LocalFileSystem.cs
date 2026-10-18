@@ -24,4 +24,17 @@ public class LocalFileSystem : IFileSystem
     {
         return Environment.GetEnvironmentVariable("HOME");
     }
+
+    public List<string> GetFileNames(string directory)
+    {
+        var fileNames = new List<string>();
+
+        // GetFiles returns full path, so keep only the name part.
+        foreach (string filePath in Directory.GetFiles(directory))
+        {
+            fileNames.Add(Path.GetFileName(filePath));
+        }
+
+        return fileNames;
+    }
 }

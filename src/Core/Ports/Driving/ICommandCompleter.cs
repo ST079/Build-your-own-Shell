@@ -8,4 +8,7 @@ public interface ICommandCompleter
 
     // Returns the longest prefix shared by all the matches.
     string FindLongestCommonPrefix(List<string> matches);
+
+    // Returns the names of the files the current directory that start with the prefix, sorted
+    List<string> FindFileMatches(string prefix);
 }

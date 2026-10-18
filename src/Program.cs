@@ -17,7 +17,7 @@ class Program
 
         // Core use cases, given the driven adapters through their ports.
         var commandHandler = new CommandHandler(output, fileSystem, executableFinder, processExecutor);
-        var commandCompleter = new CommandCompleter(executableFinder);
+        var commandCompleter = new CommandCompleter(executableFinder,fileSystem);
 
         // Driving adapter: the interactive prompt that drives the core.
         var shell = new ConsoleRepl(commandHandler, commandCompleter);

@@ -79,8 +79,16 @@ public class ConsoleRepl(ICommandHandler commandHandler, ICommandCompleter comma
     {
         string current = new(input.ToArray());
 
-        // Ask the core for the built-in and PATH commands that match the current input.
-        var matches = commandCompleter.FindMatches(current);
+        // The word being completed is the text after the last space
+        int lastSpace = current.LastIndexOf(" ");
+        bool isArgument = lastSpace >= 0;
+        string word = isArgument ? current[(lastSpace + 1)..] : current;
+
+        // // Ask the core for the built-in and PATH commands that match the current input.
+        // var matches = commandCompleter.FindMatches(current);
+
+        // The first word is a command any later word is a file name.
+        var matches = isArgument ? commandCompleter.FindFileMatches(word) : commandCompleter.FindMatches(word);
 
         // No matches: ring the bell and preserve the current input.
         if (matches.Count == 0)

@@ -11,4 +11,7 @@ public interface IFileSystem
 
     // Returns the user's home directory, or null when it is not set.
     string? GetHomeDirectory();
+
+    // Returns the names (not full paths of the files in the directory)
+    List<string> GetFileNames(string directory);
 }
