@@ -24,12 +24,19 @@ public class CommandCompleter(IExecutableFinder executableFinder, IFileSystem fi
 
     public List<string> FindFileMatches(string prefix)
     {
-        // Look at the files in the directory the shell is currently in.
-        List<string> fileNames = fileSystem.GetFileNames(fileSystem.GetCurrentDirectory());
+        // // Look at the files in the directory the shell is currently in.
+        // List<string> fileNames = fileSystem.GetFileNames(fileSystem.GetCurrentDirectory());
+
+        int lastSlash = prefix.LastIndexOf('/');
+        string directoryPart = lastSlash >= 0 ? prefix[..(lastSlash + 1)] : string.Empty;
+        string namePrefix = lastSlash >= 0 ? prefix[(lastSlash + 1)..] : prefix;
+
+        string directory = Path.Combine(fileSystem.GetCurrentDirectory(), directoryPart);
 
         // keep the ones that start with what the user typed, sorted like the command matches.
-        return fileNames
-        .Where(name => name.StartsWith(prefix, StringComparison.Ordinal))
+        return fileSystem.GetFileNames(directory)
+        .Where(name => name.StartsWith(namePrefix, StringComparison.Ordinal))
+        .Select(name => Path.Combine(directoryPart, name)) // give back the full partial path.
         .OrderBy(name => name, StringComparer.Ordinal)
         .ToList();
     }
