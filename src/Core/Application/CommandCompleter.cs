@@ -41,8 +41,7 @@ public class CommandCompleter(IExecutableFinder executableFinder, IFileSystem fi
 
         // Directories end in "/" so the completion types the slash and the next tab can ge deeper
         var entries = fileSystem.GetFileNames(directory)
-                                .Concat(fileSystem.GetDirectoryNames(directory))
-                                .Select(name => name + "/");
+                                .Concat(fileSystem.GetDirectoryNames(directory).Select(name => name + "/"));
 
         // keep the ones that start with what the user typed, sorted like the command matches.
         return entries
