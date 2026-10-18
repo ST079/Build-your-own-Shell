@@ -80,7 +80,7 @@ public class ConsoleRepl(ICommandHandler commandHandler, ICommandCompleter comma
         string current = new(input.ToArray());
 
         // The word being completed is the text after the last space
-        int lastSpace = current.LastIndexOf(" ");
+        int lastSpace = current.LastIndexOf(' ');
         bool isArgument = lastSpace >= 0;
         string word = isArgument ? current[(lastSpace + 1)..] : current;
 
@@ -100,7 +100,7 @@ public class ConsoleRepl(ICommandHandler commandHandler, ICommandCompleter comma
         // Exactly one match: complete it immediately.
         if (matches.Count == 1)
         {
-            AppendCompletion(input, current, matches[0], addSpace: true);
+            AppendCompletion(input, word, matches[0], addSpace: true);
             tabPressCount = 0;
             return;
         }
@@ -108,9 +108,9 @@ public class ConsoleRepl(ICommandHandler commandHandler, ICommandCompleter comma
         //multiple matches: complete their longest common prefix
         string commonPrefix = commandCompleter.FindLongestCommonPrefix(matches);
 
-        if (commonPrefix.Length > current.Length)
+        if (commonPrefix.Length > word.Length)
         {
-            AppendCompletion(input, current, commonPrefix, addSpace: false);
+            AppendCompletion(input, word, commonPrefix, addSpace: false);
             tabPressCount = 0;
             return;
         }
@@ -135,10 +135,10 @@ public class ConsoleRepl(ICommandHandler commandHandler, ICommandCompleter comma
         }
     }
 
-    private void AppendCompletion(List<char> input, string current, string completion, bool addSpace)
+    private void AppendCompletion(List<char> input, string word, string completion, bool addSpace)
     {
-        // add and display only the characters missing from the current input.
-        for (int i = current.Length; i < completion.Length; i++)
+        // add and display only the characters missing from the word input.
+        for (int i = word.Length; i < completion.Length; i++)
         {
             input.Add(completion[i]);
             Console.Write(completion[i]);

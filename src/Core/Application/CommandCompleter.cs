@@ -1,7 +1,6 @@
 using CodeCrafters.Shell.src.Core.Domain;
 using CodeCrafters.Shell.src.Core.Ports.Driven;
 using CodeCrafters.Shell.src.Core.Ports.Driving;
-using Microsoft.VisualBasic;
 
 namespace CodeCrafters.Shell.src.Core.Application;
 
