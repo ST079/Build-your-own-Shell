@@ -14,4 +14,7 @@ public interface IFileSystem
 
     // Returns the names (not full paths of the files in the directory)
     List<string> GetFileNames(string directory);
+
+    // Returns the names (not full paths) of the directories in the directory.
+    List<string> GetDirectoryNames(string directory);
 }

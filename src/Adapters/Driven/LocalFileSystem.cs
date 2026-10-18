@@ -37,4 +37,18 @@ public class LocalFileSystem : IFileSystem
 
         return fileNames;
     }
+
+    public List<string> GetDirectoryNames(string directory)
+    {
+        var directoryNames = new List<string>();
+
+        // GetFiles returns full path, so keep only the name part.
+        foreach (string dirPath in Directory.GetDirectories(directory))
+        {
+            directoryNames.Add(Path.GetFileName(dirPath));
+        }
+
+        return directoryNames;
+    }
+
 }

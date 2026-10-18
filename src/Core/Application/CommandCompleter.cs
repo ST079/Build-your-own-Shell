@@ -22,6 +22,7 @@ public class CommandCompleter(IExecutableFinder executableFinder, IFileSystem fi
             .ToList();
     }
 
+    // files and directories, directories end in /
     public List<string> FindFileMatches(string prefix)
     {
         // // Look at the files in the directory the shell is currently in.
@@ -33,8 +34,18 @@ public class CommandCompleter(IExecutableFinder executableFinder, IFileSystem fi
 
         string directory = Path.Combine(fileSystem.GetCurrentDirectory(), directoryPart);
 
+        if (!fileSystem.DirectoryExists(directory))
+        {
+            return [];
+        }
+
+        // Directories end in "/" so the completion types the slash and the next tab can ge deeper
+        var entries = fileSystem.GetFileNames(directory)
+                                .Concat(fileSystem.GetDirectoryNames(directory))
+                                .Select(name => name + "/");
+
         // keep the ones that start with what the user typed, sorted like the command matches.
-        return fileSystem.GetFileNames(directory)
+        return entries
         .Where(name => name.StartsWith(namePrefix, StringComparison.Ordinal))
         .Select(name => Path.Combine(directoryPart, name)) // give back the full partial path.
         .OrderBy(name => name, StringComparer.Ordinal)

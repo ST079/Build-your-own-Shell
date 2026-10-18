@@ -100,7 +100,7 @@ public class ConsoleRepl(ICommandHandler commandHandler, ICommandCompleter comma
         // Exactly one match: complete it immediately.
         if (matches.Count == 1)
         {
-            AppendCompletion(input, word, matches[0], addSpace: true);
+            AppendCompletion(input, word, matches[0], addSpace: !matches[0].EndsWith('/'));
             tabPressCount = 0;
             return;
         }
